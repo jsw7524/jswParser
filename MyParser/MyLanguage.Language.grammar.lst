@@ -1,0 +1,61 @@
+
+// ==========================================================================
+//  GPPG error listing for yacc source file <MyLanguage.Language.grammar.y - 2019/2/7 下午 10:10:18>
+// ==========================================================================
+//  Version:  1.5.2
+//  Machine:  DESKTOP-RBKG4QN
+//  DateTime: 2019/2/7 下午 10:10:19
+//  UserName: netsp
+// ==========================================================================
+
+
+%namespace MyParser
+%partial
+%parsertype MyLanguageParser
+%visibility internal
+%tokentype Token
+
+%union { 
+			public Decimal n; 
+			public string s; 
+	   }
+
+%start main
+
+%token NUMBER
+%token Add
+%token Minus
+%token Mul
+%token Div
+%token Pow
+%token LeftPar
+%token RightPar
+
+%%
+// Error: NonTerminal symbol "exr1" has no productions
+// Warning: Terminating exr1 fixes the following size-1 NonTerminal set
+   // {exr1}
+// Error: There are 1 non-terminating NonTerminal Symbols
+   //  {exr1}
+// --------------------------------------------------------------------
+
+main   : expr1                            { Console.WriteLine("Rule -> number: {0}", $1.n); }
+       ;
+
+expr1   : expr2                            { $$.n= $1.n;}
+	   | expr1 Add expr2                   { $$.n= $1.n+$3.n ;}
+	   | expr1 Minus expr2                   { $$.n= $1.n-$3.n ;}
+
+       ;
+
+expr2   : expr3
+       | LeftPar exr1 RightPar          { $$.n= $2.n;}
+       | expr2 Mul NUMBER                { $$.n= $1.n*$3.n ;}
+	   | expr2 Div NUMBER                { $$.n= $1.n/$3.n ;}
+	   ;
+
+expr3   : NUMBER                          { $$.n= $1.n;}
+       | expr3 Pow NUMBER                 { $$.n=(decimal) Math.Pow((double)$1.n, (double)$3.n) ;}
+	   ;
+%%// ==========================================================================
+

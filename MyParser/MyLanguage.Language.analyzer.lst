@@ -1,0 +1,53 @@
+
+// ==========================================================================
+//  GPLEX error listing for lex source file <MyLanguage.Language.analyzer.lex>
+// ==========================================================================
+//  Version:  1.2.2
+//  Machine:  DESKTOP-RBKG4QN
+//  DateTime: 2019/2/7 下午 09:37:59
+//  UserName: netsp
+// ==========================================================================
+
+
+%namespace MyParser
+%scannertype MyLanguageScanner
+%visibility internal
+%tokentype Token
+
+%option stack, minimize, parser, verbose, persistbuffer, noembedbuffers 
+
+Eol             (\r\n?|\n)
+NotWh           [^ \t\r\n]
+Space           [ \t]
+Number          [0-9.]+
+OpAdd           +
+OpMinus		    -
+OpMul           *
+OpDiv		    /
+LeftPar         (
+//--------------^
+// Error: Expected character <')'> 
+// --------------------------------
+RightPar        )
+
+%{
+
+%}
+
+%%
+
+/* Scanner body */
+
+{Number}		{ Console.WriteLine("token: {0}", yytext);		GetNumber(); return (int)Token.NUMBER; }
+
+{Space}+		/* skip */
+{OpAdd}             {  return (int)Token.Add; }
+{OpMinus}           {  return (int)Token.Minus; }
+{OpMul}             {  return (int)Token.Mul; }
+{OpDiv}           {  return (int)Token.Div; }
+{LeftPar}             {  return (int)Token.LeftPar; }
+{RightPar}           {  return (int)Token.RightPar; }
+
+
+%%// ==========================================================================
+
